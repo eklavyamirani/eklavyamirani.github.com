@@ -1,4 +1,12 @@
 ---
+<<<<<<< HEAD
+theme :
+  name : bootstrap-3
+layout: default
+---
+{% include JB/setup %}
+{% include themes/bootstrap-3/page.html %}
+=======
 layout: default
 ---
 
@@ -27,3 +35,4 @@ layout: default
 </div>
 
 <hr>
+>>>>>>> 1e66190783ae9427177d7336244c19cc86463b18
