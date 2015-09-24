@@ -1,0 +1,96 @@
+---
+layout: post
+title: Writing a Simple Text that glitters
+date: 2012-01-28 04:36:10.000000000 +05:30
+type: post
+published: true
+status: publish
+categories:
+- C#
+- Tutorial
+tags: []
+meta: {}
+author: 
+---
+<p>A few days ago I was trying to create a text with different colours, and suddenly I had an idea; Why not create a text that changes colours randomly to produce a glittering effect...</p>
+<p>All I needed was:<br />
+1. A timer,<br />
+2. A Random number to fill the rgb,<br />
+3. An event handler that would paint the form everytime the timer ticked.</p>
+<p>This is a simple program, and does not require any explanations, whatsoever.<br />
+<code><br />
+<font size="3"><br />
+public partial class Form1 : Form<br />
+    {<br />
+        public Form1()<br />
+        {</p>
+<p>            InitializeComponent();</p>
+<p>        }</p>
+<p>        private string strGlitterText;       </p>
+<p>        private void Form1_Paint(object sender,EventArgs e)<br />
+        {</p>
+<p>                Random r = new Random(DateTime.Now.Millisecond);<br />
+                Brush mybrush = new SolidBrush(Color.FromArgb(r.Next(255), r.Next(255), r.Next(255)));<br />
+                try<br />
+                {<br />
+                    this.strGlitterText = "Glitter";<br />
+                    Graphics g = this.CreateGraphics();<br />
+                    g.DrawString(this.strGlitterText, new Font("Times New Roman", 14F), mybrush, new Point(30, 30));<br />
+                }<br />
+                catch (Exception f)<br />
+                { }</p>
+<p>        }</p>
+<p>    }</p>
+<p>namespace GlitterText<br />
+{<br />
+    partial class Form1<br />
+    {<br />
+        ///<br />
+<summary>
+        /// Required designer variable.<br />
+        /// </summary>
+<p>        private System.ComponentModel.IContainer components = null;</p>
+<p>        ///<br />
+<summary>
+        /// Clean up any resources being used.<br />
+        /// </summary>
+<p>        /// true if managed resources should be disposed; otherwise, false.<br />
+        protected override void Dispose(bool disposing)<br />
+        {<br />
+            if (disposing &amp;&amp; (components != null))<br />
+            {<br />
+                components.Dispose();<br />
+            }<br />
+            base.Dispose(disposing);<br />
+        }</p>
+<p>        #region Windows Form Designer generated code</p>
+<p>        ///<br />
+<summary>
+        /// Required method for Designer support - do not modify<br />
+        /// the contents of this method with the code editor.<br />
+        /// </summary>
+<p>        private void InitializeComponent()<br />
+        {<br />
+            this.components = new System.ComponentModel.Container();<br />
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;</p>
+<p>            //Timer to change the colour of the text<br />
+            this.GlitterTime = new System.Timers.Timer(10);<br />
+            //Repaint the form window when the timer ticks<br />
+            this.GlitterTime.Elapsed += new System.Timers.ElapsedEventHandler(Form1_Paint);<br />
+            this.GlitterTime.AutoReset = true;<br />
+            this.GlitterTime.Start();</p>
+<p>            this.Text = "Glitter";</p>
+<p>            this.ClientSize = new System.Drawing.Size(1280, 1024);<br />
+            //Whenever repainting is required, the same event is called.<br />
+            this.Paint+=new System.Windows.Forms.PaintEventHandler(Form1_Paint);<br />
+        }</p>
+<p>        #endregion<br />
+        private System.Timers.Timer GlitterTime;<br />
+    }<br />
+}</p>
+<p></font><br />
+</code><br />
+[caption id="attachment_25" align="aligncenter" width="300" caption="Purple Colour"]<a href="http://corneringeki.azurewebsites.net/wp-content/uploads/2012/03/glitter1.jpg"><img src="{{ site.baseurl }}/assets/glitter1.jpg?w=300" alt="Glittering text" title="Glitter1" width="300" height="168" class="size-medium wp-image-25" /></a>[/caption][caption id="attachment_26" align="aligncenter" width="300" caption="Green Colour"]<a href="http://corneringeki.azurewebsites.net/wp-content/uploads/2012/03/glitter2.jpg"><img src="{{ site.baseurl }}/assets/glitter2.jpg?w=300" alt="Glittering text" title="Glitter screenshot" width="300" height="168" class="size-medium wp-image-26" /></a>[/caption]</p>
+<p>I have created a library to add this text to any UI control, and providing the position of the text or to center it by default.</p>
+<p>Happy Coding,<br />
+Eklavya Mirani</p>

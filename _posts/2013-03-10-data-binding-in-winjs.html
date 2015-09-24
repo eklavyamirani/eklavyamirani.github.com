@@ -1,0 +1,200 @@
+---
+layout: post
+title: 'Developing Windows 8 Apps with HTML5/js : Data Binding in WinJS'
+date: 2013-03-10 20:27:11.000000000 +05:30
+type: post
+published: true
+status: publish
+categories:
+- HTML5
+- Javascript
+- Tutorial
+- Windows 8 Apps
+- WinJS
+tags:
+- Data-Binding
+- Details
+- Windows 8
+- WinJS
+meta:
+  _publicize_pending: '1'
+author: 
+---
+<h2><strong>What is data-binding?</strong></h2>
+<p>So, we have been hearing lots about data-binding, especially if you have ever tried WPF, ASP.net, WinJS, etc. But what is it exactly?<br />
+It's exactly what you might think it is, <em>a way to bind the data, with…. What?</em><br />
+Formally, </p>
+<blockquote><p>Data binding is a way of creating a connection, which binds together the Application UI with the Business Logic. </p></blockquote>
+<p>Okay, here’s a simple way to explain it:</p>
+<ul>
+<li>You have a textbox. And then you have a property that it represents.</li>
+<li>Your textbox is the View and the property, say name, is the model.</li>
+<li>You want that everytime the user changes his name in the Textbox (view), the model reflects it automatically.</li>
+<li>Similarly, when the property ‘name’ changes in the code behind, the UI reflects the updated values automatically.</li>
+</ul>
+<p>This is data binding. Simple.</p>
+<h2><strong>What are the different types of data binding?</strong></h2>
+<h3><strong>One Time Binding</strong></h3>
+<p>	One time data-binding is, as the name suggests, a one time only binding. The View is bound to the model only once. So once the bound data is loaded, any changes in the model is not reflected by the view/ui.</p>
+<p>So here's a simple view that I am using to explain what it is:<br />
+[caption id="attachment_154" align="aligncenter" width="645"]<a href="http://corneringeki.azurewebsites.net/wp-content/uploads/2013/03/winjs-one-time-binding-demo.jpg"><img src="{{ site.baseurl }}/assets/winjs-one-time-binding-demo.jpg?w=645" alt="One Time Data Binding Demo" width="645" height="410" class="size-large wp-image-154" /></a> One Time Data Binding Demo[/caption]</p>
+<p>Here's how the code-behind looks like:</p>
+<pre>
+(function () {
+    "use strict";
+    var _model = {
+        name: "Eklavya Mirani",
+        blog: "http://corneringeki.wordpress.com"
+    };
+
+    var _viewModel = {
+        model: _model
+    };
+
+
+
+WinJS.UI.Pages.define("/pages/One Time/One Time.html", {
+     ready: function (element, options) {
+         // TODO: Initialize the page here.
+         init();
+         //defining the namespace for the new view model.
+         WinJS.Namespace.define("Application.Pages.ViewModel",
+                                _viewModel);
+         WinJS.Binding.processAll(null, Application.Pages.ViewModel);
+        },
+
+        unload: function () {
+            // TODO: Respond to navigations away from this page.
+        },
+
+        updateLayout: function (element, viewState, lastViewState) {
+            // TODO: Respond to changes in viewState.
+        }
+    });
+})();</pre>
+<p>Let us look at the code part by part.</p>
+<pre>
+var _model = {
+        name: "Eklavya Mirani",
+        blog: "http://corneringeki.wordpress.com"
+    };
+
+    var _viewModel = {
+        model: _model
+    };
+</pre>
+<p>So now we define a model, with the properties name and blog. Also we define the View Model that will act as the data source for data-binding.</p>
+<p>If you're wondering why do I have a '_' before the names of these objects, it is because in javascript, an '_' prefix signifies that it is a private property. Even the intellisense will not show you properties and objects prefixed with an '_'</p>
+<p>Since we have made our view model a private property, we need a way to access it publicly, and we do this by assigning it a namespace.</p>
+<pre>
+//defining the namespace for the new view model.
+WinJS.Namespace.define("Application.Pages.ViewModel", _viewModel);
+</pre>
+<p>Application.Pages.ViewModel is the win-data-bindsource that we will use as the binding source.</p>
+<p>One last thing to do before we complete our data-binding.</p>
+<pre>
+WinJS.Binding.processAll(null, Application.Pages.ViewModel);</pre>
+<p>WinJS.Binding.processAll() is used to process all the data sources to their respective UI elements.<br />
+We can process all data-bound elements in a given parent element by passing the parent element instead of null, or null to process all data-bound elements in the entire page.</p>
+<p><code></p>
+<pre>
+&lt;section&gt;
+&lt;h2 id="boundHeader"&gt;&lt;/h2&gt;&lt;br /&gt;
+        
+&lt;input id="txtInput" type="text" placeholder="Enter the value here"
+  data-win-bind="value : model.name"/&gt; &lt;br/&gt;
+
+&lt;input id="buttonChange" type="button" value="Change values" /&gt;&lt;br /&gt;  
+
+&lt;/section&gt;</pre>
+<p></code></p>
+<p>The above code is pretty much self explanatory, I am creating a section and adding elements to demonstrate data binding.</p>
+<p>Before HTML5, adding custom attributes to your elements was not allowed, but now it can be done by using data-* attribute.<br />
+You can add any custom attribute with the data- prefix and save any metadata to it.<br />
+Okay, as I mentioned, data-win-bindsource refers to the namespace "Application.Pages.ViewModel" which contains the View Model that we created.</p>
+<p>To actually bind an attribute of the element to our model, we use:</p>
+<pre>data-win-bind="value : model.name"</pre>
+<p>This binds our element's 'value' attribute to the model.name property.</p>
+<p>The button is used to change the Application.Pages.ViewModel.model.name to the value in textbox.</p>
+<p>In one time binding, the change in the values of the model is not reflected by the view after it is modified, hence the name "One Time" binding.</p>
+<p>And that, is what is one time data-binding.! (The full code is attached at the end.)</p>
+<h3><strong>One Way Binding</strong></h3>
+<p>	One way data binding, is like a pipe one end of which is screwed into the tap and the other is used to spray water (data in our case) in the garden (View). You can get water from the tap, but you can’t send it back in (if you have ever done that, I’d love to hear why :) ).<br />
+So for a to the point answer, one way binding is the type of binding where the model is bound to the view in such a way that any changes in the model will be reflected by the view but the changes in the view WILL NOT be reflected by the model.</p>
+<p>One Way binding is implemented almost entirely as one time binding, but for one small change:</p>
+<pre>    var _viewModel = {
+        model: WinJS.Binding.as(_model)
+    };</pre>
+<p>If you remember from above, instead of directly assigning _model to model, we now formally specify that _model is to be used for data binding by making a call to WinJS.Binding.as() which returns an observable object.</p>
+<p>Now if you check, all changes to the model are reflected back by the View.</p>
+<h3><strong>Two Way Binding</strong></h3>
+<p>	Two way data binding is pretty simple if you understood one way binding. This type of binding works both ways. You make changes to the View, it gets reflected in the model and if you make changes in model, the view reflects those changes.<br />
+Now, how do you trigger the changes from the View to the model is a different story. It may happen that you want the values to get updated as soon as you  “key up”, or “on blur” or any other event that the bound element supports. Its more of a preference actually. </p>
+<pre>
+var _model = {
+    name: "Eklavya Mirani",
+    blog: "http://corneringeki.wordpress.com"
+    };
+
+var _viewModel = {
+    model: WinJS.Binding.as(_model),
+    //Requires to be marked by
+    //WinJS.Utilities.markSupportedForProcessing
+    setValue: function (args) {
+    Application.Pages.ViewModel.model.name = args.srcElement.value;
+    }
+};
+</pre>
+<p>Two way data binding is slightly different from One Way Binding. Here we specify a setter function to change the value of the Application.Pages.ViewModel.model.name to an element's value attribute passed as an argument.</p>
+<p>What I am actually doing here is, setting up an event handler inside of the Model, so that it can be bound to the a specific event of the target attribute.</p>
+<p>Say, for example, I set the onblur event to setValue, every time the onblur is fired, setValue is executed and the model.name also gets modified. And this is why we use </p>
+<pre>Application.Pages.ViewModel.model.name = args.srcElement.value;</pre>
+<p>instead of </p>
+<pre>this.model.name = args.srcElement.value;</pre>
+<p>So when you test this, you will notice an exception, breaking on the debugger.</p>
+<p>So whats actually happening here?<br />
+By default, WinJS doesn’t allow functions to be executed in data binding unless they are explicitly flagged to support data binding.<br />
+What you need to do is to call the WinJS.Utilities.markSupportedForProcessing(function func) to allow WinJS to support the execution of this function.</p>
+<p>So the whole code looks like this:</p>
+<pre>
+(function () {
+    "use strict";
+var _model = {
+    name: "Eklavya Mirani",
+    blog: "http://corneringeki.wordpress.com"
+    };
+
+var _viewModel = {
+    model: WinJS.Binding.as(_model),
+    //Requires to be marked by
+    //WinJS.Utilities.markSupportedForProcessing
+    setValue: function (args) {
+    Application.Pages.ViewModel.model.name = args.srcElement.value;
+    }
+};
+
+WinJS.UI.Pages.define("/pages/Two Way/Two Way.html", {
+    ready: function (element, options) {
+   // TODO: Initialize the page here.
+            
+   //defining the namespace for the new view model.
+   WinJS.Namespace.define("Application.Pages.ViewModel", _viewModel);
+
+   //Marking the setValue function
+   WinJS.Utilities.markSupportedForProcessing(
+                        Application.Pages.ViewModel.setValue);
+
+   WinJS.Binding.processAll(null, Application.Pages.ViewModel);
+   },
+
+    unload: function () {
+    // TODO: Respond to navigations away from this page.
+    },
+
+    updateLayout: function (element, viewState, lastViewState) {
+    // TODO: Respond to changes in viewState.
+        }
+    });
+})();</pre></p>
+<p>Here is a link to the VS project:<br />
+<a href="http://www.mediafire.com/download.php?3sulf8xn7cxcc6c" title="Data Binding in WinJS Demo">Data Binding in WinJS Demo</a></p>

@@ -1,0 +1,51 @@
+---
+layout: post
+title: Binding data to a WinJS List View
+date: 
+type: post
+published: false
+status: draft
+categories: []
+tags: []
+meta: {}
+author: 
+---
+<p>In this tutorial, I will demonstrate how to bind data to the ListView control.<br />
+This is an important concept as often you will find situations where you might be getting your data from an external source and you need to show this list to the user as a list.<br />
+Just an FYI, it isn’t necessary to do this as a list view, you may use a table instead, or perhaps even an unordered list.</p>
+<p>Okay so here is the model that we are going to be using for this tutorial:<br />
+[Convert the code to something else]</p>
+<p>var _movies = new WinJS.Binding.List([<br />
+        { title : "The Dictator", year : "1922" },<br />
+        { title:"A Team", year : "2012" },<br />
+        {title : "Spiderman 3", year:"2007"},<br />
+        {title : "Wolverine", year : "1992"},<br />
+        { title: "Source Code", year: "2005" },<br />
+        { title: "Harry Potter", year: "1922" },<br />
+        { title: "The Adventures of Tintin", year: "2012" },<br />
+        { title: "X-Men", year: "2007" },<br />
+        { title: "50 First dates", year: "2002" },</p>
+<p>    ]);</p>
+<p>Just some random data of movies and their fictitious release dates. We will now bind this model to a list view. Now, it is possible to bind this data to some other ui elements such as FlipView or heck, even a
+<ul> (that in itself deserves a new post.)<br />
+So what next?<br />
+Lets create a listview.!<br />
+How do we create one, you ask?<br />
+Err.. I missed to tell you the catch :P We need an item template to decorate this view of each item in the model that we are using.<br />
+Lets quickly write the item template and get back to writing our ListView.</p>
+<div id="”list-view-item-template”">
+<h3 class="item">
+</h3>
+</div>
+<p>[code]<br />
+&lt;div id=&quot;list-view-container&quot; data-win-control=&quot;WinJS.UI.ListView&quot; data-win-options=&quot;{ itemDataSource : Application.Data.Movies.movies.dataSource,<br />
+                                                                                                    itemTemplate : select('#list-view-item-template'),<br />
+                                                                                                    selectionMode : 'multi',<br />
+                                                                                                    layout : {type : WinJS.UI.ListLayout},</p>
+<p>                                                                                                    tapBehavior : 'toggleSelect',</p>
+<p>                                                                                                    }&quot;&gt;</p>
+<p>&lt;/div&gt; [/code]</p>
+<p>Remember, always write the item template for a ListView or FlipView Control before defining the control.<br />
+Now that we have the item template ready, lets do the final step. <em>Lets write the listview control.</em></p>
+<div id="list-view-container"></div>
+</ul>

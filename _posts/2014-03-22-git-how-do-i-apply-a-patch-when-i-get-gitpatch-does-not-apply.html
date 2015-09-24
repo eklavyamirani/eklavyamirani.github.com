@@ -1,0 +1,32 @@
+---
+layout: post
+title: 'Git: How do I apply a patch when I get "Git:patch does not apply"?'
+date: 2014-03-22 21:56:37.000000000 +05:30
+type: post
+published: true
+status: publish
+categories:
+- Problem
+- Solution
+tags:
+- Git
+- How to
+- Problem
+- Solution
+meta:
+  _rest_api_published: '1'
+  _rest_api_client_id: '-1'
+  _wpas_skip_6744839: '1'
+author: 
+---
+<p>Hey Everyone, it's been a long long time since I posted, however I am back, posting about a recent problem I encountered. I have been working on <a href="http://bugzil.la/927124"><strong>Reader Mode for Metro Firefox</strong></a> for a while now, and I am familiar with their easy to use MQ (Mercurial Queues) system.</p>
+<p>However, I started experimenting with their Github repository, gecko-dev and tried to apply my patch on the forked repository (<em>I hoped, sincerely hoped, but yeah you know how this story goes, don't you?</em>).</p>
+<p>Anyway, coming straight to the point, I was welcomed to git by a sweet message:</p>
+<p style="text-align:center;"><strong><em>"git:Patch does not apply"<br />
+</em></strong></p>
+<p style="text-align:left;">I looked around, and found a simple fix for this:</p>
+<p style="text-align:center;"><strong>$git apply --reject ThePatchThatFailed.patch</strong></p>
+<p style="text-align:left;">Let me explain what this does. It will apply the parts of the patch that succeed to the local repository, and whatever is not applied is saved to a <strong>*.rej</strong> file.</p>
+<p style="text-align:left;">Now you can manually fix the hunks (or in normal language, specific parts that start with @@ -1251,6 +1251,23 @@...).</p>
+<p style="text-align:left;">Using the *.rej files to manually make changes to the local repostory is straightforward, open the rej file and the corresponding file with the same name without the .rej extension and manually add your changes to the file. Once done, you can just delete the rej file and repeat for all other rej files.</p>
+<p style="text-align:left;">Once you finish, you can just <strong>git commit</strong> your repository and you're done! Sounds easy, right? Is there an easy way around this? Please feel free to share your opinions :)</p>

@@ -1,0 +1,55 @@
+---
+layout: post
+title: The GlitterText class
+date: 2012-02-21 06:36:08.000000000 +05:30
+type: post
+published: true
+status: publish
+categories:
+- C#
+- Tutorial
+tags: []
+meta: {}
+author: 
+---
+<p>In my earlier post, I created a simple app where one can create a form with the desired string glittering in different colours.<br />
+<a href="http://corneringeki.wordpress.com/2012/02/25/writing-a-simple-text-that-glitters/" title="Writing a Simple Text that glitters">Writing a Simple Text that glitters</a></p>
+<p>Now I have created a class to make this a little more flexible, i.e. this class can now be used to add glittering text to any control that inherits from System.Windows.Forms.Control.</p>
+<p><font size="3"></p>
+<p>using System;<br />
+using System.Drawing;</p>
+<p>public class GlitterText<br />
+{<br />
+    private string strGlitterText;<br />
+    private System.Windows.Forms.Control GlitterControl;<br />
+    private System.Timers.Timer GlitterTime;<br />
+    private int X, Y,GlitterInterval;<br />
+    public GlitterText(String _text,System.Windows.Forms.Control _GlitterControl,int _X=0,int _Y=0,int _GlitterInterval=100)<br />
+	{<br />
+        this.strGlitterText = _text;<br />
+        this.GlitterControl = _GlitterControl;<br />
+        this.X = _X;<br />
+        this.Y = _Y;<br />
+        this.GlitterInterval = _GlitterInterval;<br />
+        InitialiseGlitterTimer();<br />
+	}<br />
+    private void InitialiseGlitterTimer()<br />
+    {<br />
+        this.GlitterTime = new System.Timers.Timer(this.GlitterInterval);<br />
+        this.GlitterTime.AutoReset = true;<br />
+        this.GlitterTime.Elapsed += new System.Timers.ElapsedEventHandler(GlitterControl_Paint);<br />
+        this.GlitterTime.Start();<br />
+    }<br />
+    private void GlitterControl_Paint(object sender,EventArgs ea)<br />
+    {</p>
+<p>        try<br />
+        {<br />
+            Random r = new Random(DateTime.Now.Millisecond);<br />
+            Brush mybrush = new SolidBrush(Color.FromArgb(r.Next(255), r.Next(255), r.Next(255)));<br />
+            Graphics g = this.GlitterControl.CreateGraphics();<br />
+            g.DrawString(this.strGlitterText, new Font("Times New Roman", 14F), mybrush, new Point(this.X, this.Y));<br />
+        }<br />
+        catch { }</p>
+<p>    }<br />
+}</p>
+<p></font></p>

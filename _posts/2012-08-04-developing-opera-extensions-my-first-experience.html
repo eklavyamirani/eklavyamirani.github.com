@@ -1,0 +1,73 @@
+---
+layout: post
+title: 'Developing Opera Extensions: My first experience'
+date: 2012-08-04 18:17:55.000000000 +05:30
+type: post
+published: true
+status: publish
+categories:
+- Experience
+- Javascript
+- Linkstatic
+- Opera Extension
+tags:
+- Develop
+- Experience
+- Extension
+- Javascript
+- Linkstatic
+- MSDN
+- Opera
+- phpBB
+meta:
+  _oembed_ac68e5f4d5f2b09ac247c665a28630f7: '{{unknown}}'
+  _oembed_d7767719f1e15058f24bc702e202ff49: '{{unknown}}'
+  _oembed_5dc85d616b78a9dd471b134b65aab3cb: '{{unknown}}'
+  _oembed_f08e63772b96f0dcca3051f6633aa325: '{{unknown}}'
+  _oembed_b970f813db6728cdb19d1c1c0b4f0644: '{{unknown}}'
+  _oembed_c9d48f85fab15135e0f621ef322e9e49: '{{unknown}}'
+  _oembed_a08f5991d32b0ab3548ad485d7317fdf: '{{unknown}}'
+  _oembed_02e3924819a62c0ecad7a71f61115e74: '{{unknown}}'
+  _oembed_875214d5d8d730099508b433e3e82a2b: '{{unknown}}'
+  _oembed_8cda47e064899d575c1db8d9cf4de2b7: '{{unknown}}'
+  _oembed_ada1b2488dd2bd12e9c6456f495c3915: '{{unknown}}'
+  _oembed_b3b08a925ae02e65e279977e2cce1083: '{{unknown}}'
+  _oembed_ba750fa6fa1543ea35ec4ebc782e4413: '{{unknown}}'
+author: 
+---
+<p>Everytime I see a link someone posted without the anchor tag, I ,being the lazy one, always wonder if it was possible to make that link clickable. Obviously, if a link is posted, it ought to be clicked. Does the author assume we, "The lazy ones" would actually copy paste the entire thing, open a new tab, paste the link and hit enter and get back to the old page the link was opened from and complete reading it?</p>
+<p>If the answer is yes, that link must be pointing to one heck of a page that moves my world, or else it might subtly, very subtly, enter my list of, what I call, "Links I can do without."</p>
+<p>Lemme show you what I mean.</p>
+<p>http://www.google.com</p>
+<p><a href="http://www.google.com">http://www.google.com</a></p>
+<p>Which one is better? I prefer the one that is clickable, I'd middle click on it and send it to a background tab in my Opera.</p>
+<p>So, today I finally completed the first version of my Opera Extension, LinkMoi. What it does? It makes the non-clickable links/Uri clickable. And if you visit phpBB forums, this might be your lucky day. Most of them have a common rule, "all links must be coded." Well, these links aren't clickable just coded, so if you want to open it select it (or click 'select all') and add it to the address bar.</p>
+<p>With LinkMoi, the link becomes clickable, just click and open. Simple.<br />
+(I know Linkify was developed for this, and it has been there for a while...My intention was to implement one myself.)</p>
+<p>I wrote a simple javascript to convert all the urls to clickable links, this wasn't hard. I created a button, whose onclick event calls the function that does this job.</p>
+<p>Click, and BINGO! Click again and.<br />
+.<br />
+.<br />
+.<br />
+WTF!<br />
+http://www.google.com becomes http://www.google.com"&gt;http://www.google.com.</p>
+<p>and I click again.. WTF!x2<br />
+http://www.google.com"&gt;http://www.google.com becomes http://www.google.com"&gt;http://www.google.com"&gt;http://www.google.com.</p>
+<p>As you might have guessed, href="http://www.google.com" also gets converted. I will not go into my trials and errors, certainly, <em>I don't really enjoy talking about my mistakes :)</em> What I did was to skip those links that followed '&gt;' symbol. Genius, eh? (Hang on, read the next few lines before answering that.)</p>
+<p>Once I fixed it, I copied the source of a website I use often and used it in my test page.<em> Didn't work.</em> Check the source and found, the link was wrapped around the 'span' tag.</p>
+<p>So much for a genius thought!</p>
+<p>I tried catching the '"' along with the link (using ["]? regex) and skip the link which was contained in '"' as they are the ones causing troubles. So, I had to skip a few links in the regex search, as every href="http://..."&gt; lead to 3 false results:</p>
+<p>href=<strong>"http://...</strong>"&gt;http://<br />
+href="<strong>http://...</strong>"&gt;http://<br />
+href="http://..."&gt;<strong>http://</strong></p>
+<p>So, I skipped 3 links. Worked.<em> Excellent job, I said to myself.</em></p>
+<p>So I made the extension, zipped and renamed it to LinkMoi.oex and began testing. I found out that some links were being skipped, and the header of a page showed a 'url' it wasn't supposed to.</p>
+<p>I digged a little deeper, looked at the source. What I found did another damage to my "Geniusness." Links were also present as part of the images and in that case I recieved only 2 false positives:</p>
+<p>src=<strong>"http://</strong>"&gt;<br />
+src="<strong>http://</strong>"&gt;</p>
+<p>So skipping 3 meant I certainly was missing a few links.<br />
+<em>Darn!</em></p>
+<p>To fix it, I took a piece of paper and pen, and actually wrote down the possible ways in which links could be posted in a website, between <em>'span', in 'src', in 'href', as 'url', 'action',</em> etc. So I checked the 9 character substring preceding the link and checked for these keywords, if found skip the links accordingly. And as a default check anything which has '=' in the last two characters is skipped.</p>
+<p>Bingo! Works. Checked on a few phpBB forums, MSDN, wordpress and everything works just fine.</p>
+<p>So here it is, my first experience developing an Opera Extension. I will post the link as soon as it passes the Opera screening.</p>
+<p>If you want to develop your own extension: <a href="http://dev.opera.com/articles/view/hands-on-building-an-opera-extension/">http://dev.opera.com/articles/view/hands-on-building-an-opera-extension/</a></p>

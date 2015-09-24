@@ -1,0 +1,63 @@
+---
+layout: post
+title: Logging in MSTest framework
+date: 
+type: post
+published: false
+status: draft
+categories:
+- C#
+- Problem
+- Solution
+tags: []
+meta:
+  _edit_last: '1'
+author: 
+---
+<p>I have been really fond of Logging, since the day I started my contribution to Mozilla Firefox. I was debugging my code the "Old School" way - tracing and logging.</p>
+<p>So having said that, I was working on some Unit Tests the other day and I needed to use a Logging Framework in my MSTest unit tests.</p>
+<p>Requirement:<br />
+Each test case should log:<br />
+When the test case's execution began and ended with final outcome of the test<br />
+Which steps were successfully completed<br />
+And where the failure occurred, in case the test failed</p>
+<p>Before I post my solution, there is an important piece of information (because, umm... I didn't know it before I started working on this :) ) that I want to share:</p>
+<p>The attributes provided by the MSTest unit testing framework:</p>
+<p>ClassInitialize, TestInitialize, TestCleanup, ClassCleanup</p>
+<p>&nbsp;</p>
+<p>These are important because these are the sockets where we will be plugging most of our logging plumbing code.</p>
+<p>ClassInitialize:</p>
+<p>This is the piece of code that gets executed when you start the test script. You set up your environment for the entire test session here. e.g. Registering a demo user that is to be used for the entire test script.</p>
+<p>In my case, I use it to set the configuration of my logging framework, e.g. setting the output directory and the output log file format.</p>
+<p>[Insert Signature]</p>
+<p>TestInitialize:</p>
+<p>This piece of code gets executed at the beginning of every test case. You set up your environment for the test case here. e.g. Login and get access token.</p>
+<p>For logging purposes, it is used to log the beginning of the execution of a test case.</p>
+<p>[TestInitialize]<br />
+public void TestInitialize()<br />
+{<br />
+Log.BeginTestCase(TestContext.TestName);<br />
+}</p>
+<p>&nbsp;</p>
+<p>TestCleanup:</p>
+<p>This piece of code gets executed whenever the test case finishes execution. You can teardown the environment setup for the test case here. (Note: this gets executed for every test case)</p>
+<p>For Logging purpose this is very important as this is where you can log the final outcome of the test case and mark the completion of the execution of a test case.</p>
+<p>[TestCleanup]<br />
+public void TestCleanup()<br />
+{<br />
+if (TestContext.CurrentTestOutcome == UnitTestOutcome.Passed)<br />
+{<br />
+Log.PassTest(TestContext.TestName);<br />
+}</p>
+<p>Log.FinishTestCase(TestContext.TestName);<br />
+}</p>
+<p>&nbsp;</p>
+<p>ClassCleanup:</p>
+<p>This marks the end of the test script. Here, you teardown the setups done at the beginning of the test script.</p>
+<p>If you want to print a summary of your log results, this is where its done since all the test cases have been executed at this point. The framework does not give us this feature of collecting the summary out of the box. This needs to be implemented by yourself, but that being said, its fairly easy to do so. I created a list of tuples to capture the testcase name, outcome and reason for failure if any.</p>
+<p>&nbsp;</p>
+<p>So to summarize:</p>
+<p>ClassInitialize - This gets executed at the beginning of the test script.</p>
+<p>ClassCleanup - This gets executed at the end of the test script</p>
+<p>TestInitialize - This gets executed at the beginning of the test case.</p>
+<p>TestCleanup - This gets executed at the end of the test case.</p>

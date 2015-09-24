@@ -1,0 +1,41 @@
+---
+layout: post
+title: 'Encountered Another Exception : "Value does not fall within the expected range."'
+date: 2012-08-28 00:15:41.000000000 +05:30
+type: post
+published: true
+status: publish
+categories:
+- C#
+- Exception
+- Experience
+- Problem
+- Solution
+- Windows Phone 7
+tags:
+- C#
+- Dictionary
+- Exception
+- KeyValue
+- Solution
+- Value does not fall within the expected range.
+- Windows Phone
+- Windows Phone 7
+meta:
+  _wpas_done_facebook: '1'
+author: 
+---
+<p>Today while debugging my new Windows Phone 7 Application, I encountered an exception I had never seen before:<br />
+<em><strong>"Value does not fall within the expected range."</strong></em><br />
+To be precise, I encountered it here:</p>
+<p><strong>SomeRandomDictionary["TheMightyKey"]="WeirdValue";</strong></p>
+<p>I scratched my head, puzzled, cuz I knew this statement had executed before successfully. And then after some googling, I came to know this happens if you assign a Key value pair for some key that already exists in the dictionary.</p>
+<p>You must be wondering why I am telling you this story, and why the heck am I not posting the solution, the answer is simple:</p>
+<p>It makes me feel like The Wise One. AND its my blog, I can do whatever I want ;)</p>
+<p>Anyway, coming to the solution, you can simply resolve this by checking if a key already exists and removing it if it does before assigning a new KeyValuePair.</p>
+<p><strong>if(SomeRandomDictionary.Contains("TheMightyKey"))</p>
+<p>SomeRandomDictionary.Remove("TheMightyKey");</p>
+<p>SomerandomDictionary["TheMightyKey"]="Weird Value";</strong></p>
+<p>There you go, now you probably wont ever see this exception again.</p>
+<p>Happy Coding.</p>
+<pre></pre>
