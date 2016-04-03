@@ -35,13 +35,13 @@ meta:
   _oembed_ba750fa6fa1543ea35ec4ebc782e4413: '{{unknown}}'
 author: Eklavya Mirani
 ---
-<p>Everytime I see a link someone posted without the anchor tag, I ,being the lazy one, always wonder if it was possible to make that link clickable. Obviously, if a link is posted, it ought to be clicked. Does the author assume we, "The lazy ones" would actually copy paste the entire thing, open a new tab, paste the link and hit enter and get back to the old page the link was opened from and complete reading it?</p>
+<p>Everytime I see a link someone posts without the anchor tag, I, being the lazy one, always wonder if it is possible to make that link clickable. Obviously, if a link is posted, it ought to be clicked. Does the author assume we, "The lazy ones" would actually copy paste the entire thing, open a new tab, paste the link and hit enter and get back to the old page the link was opened from and complete reading it?</p>
 <p>If the answer is yes, that link must be pointing to one heck of a page that moves my world, or else it might subtly, very subtly, enter my list of, what I call, "Links I can do without."</p>
 <p>Lemme show you what I mean.</p>
 <p>http://www.google.com</p>
 <p><a href="http://www.google.com">http://www.google.com</a></p>
 <p>Which one is better? I prefer the one that is clickable, I'd middle click on it and send it to a background tab in my Opera.</p>
-<p>So, today I finally completed the first version of my Opera Extension, LinkMoi. What it does? It makes the non-clickable links/Uri clickable. And if you visit phpBB forums, this might be your lucky day. Most of them have a common rule, "all links must be coded." Well, these links aren't clickable just coded, so if you want to open it select it (or click 'select all') and add it to the address bar.</p>
+<p>So, today I finally completed the first version of my Opera Extension, LinkMoi. What does it do? It makes the non-clickable links/Uri clickable. And if you visit phpBB forums, this might be your lucky day. Most of them have a common rule, "all links must be coded." Well, these links aren't clickable-just coded, so if you want to open it select it (or click 'select all') and add it to the address bar.</p>
 <p>With LinkMoi, the link becomes clickable, just click and open. Simple.<br />
 (I know Linkify was developed for this, and it has been there for a while...My intention was to implement one myself.)</p>
 <p>I wrote a simple javascript to convert all the urls to clickable links, this wasn't hard. I created a button, whose onclick event calls the function that does this job.</p>
@@ -69,5 +69,5 @@ src="<strong>http://</strong>"&gt;</p>
 <em>Darn!</em></p>
 <p>To fix it, I took a piece of paper and pen, and actually wrote down the possible ways in which links could be posted in a website, between <em>'span', in 'src', in 'href', as 'url', 'action',</em> etc. So I checked the 9 character substring preceding the link and checked for these keywords, if found skip the links accordingly. And as a default check anything which has '=' in the last two characters is skipped.</p>
 <p>Bingo! Works. Checked on a few phpBB forums, MSDN, wordpress and everything works just fine.</p>
-<p>So here it is, my first experience developing an Opera Extension. I will post the link as soon as it passes the Opera screening.</p>
+<p>So here it is, my first experience developing an Opera Extension. ~~I will post the link as soon as it passes the Opera screening.~~ Here's the link: <a href="https://addons.opera.com/en/extensions/details/linkmoi/?display=en">https://addons.opera.com/en/extensions/details/linkmoi/?display=en</a></p>
 <p>If you want to develop your own extension: <a href="http://dev.opera.com/articles/view/hands-on-building-an-opera-extension/">http://dev.opera.com/articles/view/hands-on-building-an-opera-extension/</a></p>
