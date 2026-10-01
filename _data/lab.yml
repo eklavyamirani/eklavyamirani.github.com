@@ -1,0 +1,32 @@
+# Smaller builds, shown as a compact list.
+# Fields: name, note, lang, repo
+
+- name: stt-keyboard
+  note: On-device speech-to-text from the system tray, using faster-whisper. No cloud.
+  lang: Python
+  repo: https://github.com/eklavyamirani/stt-keyboard
+
+- name: llama-cpp-config
+  note: Launchers and sampling profiles for serving local LLMs with llama.cpp.
+  lang: Shell
+  repo: https://github.com/eklavyamirani/llama-cpp-config
+
+- name: workout-app
+  note: A workout tracker that needs very few taps and turns last week's session into this week's plan.
+  lang: TypeScript
+  repo: https://github.com/eklavyamirani/workout-app
+
+- name: bookmarks-manager
+  note: A full-stack app built by pairing with an LLM, with every prompt and fix logged. Ships as a container from CI.
+  lang: TypeScript
+  repo: https://github.com/eklavyamirani/bookmarks-manager
+
+- name: docker-playwright-mcp
+  note: A containerised Playwright MCP server for browser automation by agents.
+  lang: Shell
+  repo: https://github.com/eklavyamirani/docker-playwright-mcp
+
+- name: rust_url_shortener
+  note: A URL shortener in Rust.
+  lang: Rust
+  repo: https://github.com/eklavyamirani/rust_url_shortener

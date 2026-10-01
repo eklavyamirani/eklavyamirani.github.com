@@ -1,16 +1,23 @@
-# Site settings
-title: CorneringEki
-header-img: img/home-bg.jpg
-email: eklavyamirani@hotmail.com
-description: "Eklavya Mirani's corner"
+title: Eklavya Mirani
+description: >-
+  Software engineer. Real-time audio in the browser, ESP32 firmware,
+  self-hosted infrastructure, and tools for reviewing code.
+url: "https://github.ekkylab.uk"
 baseurl: ""
-url: "http://eklavyamirani.github.io"
-twitter_username: eklavyamirani
-github_username:  eklavyamirani
 
-# Build settings
+author:
+  name: Eklavya Mirani
+  location: Bellevue, WA
+  email: github1@mail.ekkylab.uk
+  github: eklavyamirani
+  # linkedin: your-handle        # uncomment to show a LinkedIn link
+
+# Drop a PDF at /resume.pdf and the resume links appear on their own.
+resume_path: /resume.pdf
+
 markdown: kramdown
-highlighter: pygments
-permalink: pretty
-paginate: 5
-exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor

@@ -1,36 +1,164 @@
 ---
-layout: page
-description: "Eklavya Mirani's corner'"
+layout: default
 ---
+{% assign resume = site.static_files | where: "path", site.resume_path | first %}
 
-{% for post in paginator.posts %}
-<div class="post-preview">
-    <a href="{{ post.url | prepend: site.baseurl }}">
-        <h2 class="post-title">            {{ post.title }}
-        </h2>
-        {% if post.subtitle %}
-        <h3 class="post-subtitle">
-            {{ post.subtitle }}
-        </h3>
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div>
+      <p class="eyebrow mono">Software Engineer · {{ site.author.location }}</p>
+      <h1>Eklavya Mirani</h1>
+      <p class="lead">
+        I build software that listens, measures and explains. That ranges from
+        pitch detection in the browser and FreeRTOS firmware to the tools
+        engineers use to review each other's code.
+      </p>
+      <div class="cta">
+        <a class="btn btn--primary" href="#work">Selected work</a>
+        {% if resume %}<a class="btn" href="{{ site.resume_path | relative_url }}">Resume</a>{% endif %}
+        <a class="btn" href="https://github.com/{{ site.author.github }}">GitHub ↗</a>
+      </div>
+    </div>
+
+    <figure class="tuner" aria-hidden="true">
+      <div class="tuner__head mono"><span>A5</span><span class="tuner__cents">+3¢</span></div>
+      <svg viewBox="0 0 320 160" preserveAspectRatio="none">
+        <rect class="tuner__band" x="0" y="64" width="320" height="32"/>
+        <line class="tuner__zero" x1="0" y1="80" x2="320" y2="80"/>
+        <path class="tuner__trace" d="M0 132 C20 128 26 104 40 96 S60 70 74 74 92 90 104 84 120 72 134 78 150 86 164 80 182 74 196 79 214 85 228 80 246 76 260 80 278 83 292 80 310 78 320 79"/>
+      </svg>
+      <figcaption class="tuner__foot mono"><span>pitch over time</span><span>in tune ±10¢</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section" id="work">
+  <div class="wrap">
+    <header class="section__head">
+      <p class="eyebrow mono">01 / Selected work</p>
+      <h2>Systems with a measurable outcome.</h2>
+    </header>
+
+    <div class="projects">
+      {% for p in site.data.projects %}
+      <article class="project{% if forloop.first %} project--lead{% endif %}">
+        <div class="project__meta mono">
+          <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+          <span class="project__links">
+            {% if p.live %}<a href="{{ p.live }}">Live ↗</a>{% endif %}
+            <a href="{{ p.repo }}">Source ↗</a>
+          </span>
+        </div>
+        <h3>{{ p.name }}</h3>
+        <p class="project__tagline">{{ p.tagline }}</p>
+        <p>{{ p.summary }}</p>
+        {% if p.points.size > 0 %}
+        <ul class="points">
+          {% for pt in p.points %}<li>{{ pt }}</li>{% endfor %}
+        </ul>
         {% endif %}
-    </a>
-    <p class="post-meta">Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}</p>
-</div>
-<hr>
-{% endfor %}
+        <ul class="chips mono" aria-label="Stack">
+          {% for s in p.stack %}<li>{{ s }}</li>{% endfor %}
+        </ul>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
 
-<!-- Pager -->
-{% if paginator.total_pages > 1 %}
-<ul class="pager">
-    {% if paginator.previous_page %}
-    <li class="previous">
-        <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer Posts</a>
-    </li>
+<section class="section section--alt" id="approach">
+  <div class="wrap">
+    <header class="section__head">
+      <p class="eyebrow mono">02 / How I work</p>
+      <h2>Principles behind the work.</h2>
+    </header>
+    <ol class="principles">
+      <li>
+        <h3>Measure the thing that matters</h3>
+        <p>Fingerboard Coach doesn't say "a bit sharp". It reports +12¢ and how far to move the finger. Vague feedback doesn't change anything, for people or for systems.</p>
+      </li>
+      <li>
+        <h3>Design for the person on the other end</h3>
+        <p>Players, people learning a dance, the engineer reviewing someone else's diff. Each tool here starts from how its user actually works.</p>
+      </li>
+      <li>
+        <h3>Scale judgment, not just output</h3>
+        <p>Generated code arrives faster than anyone can review it. pr-review spends effort on the reviewer's attention, which is the real bottleneck.</p>
+      </li>
+      <li>
+        <h3>Leave it runnable</h3>
+        <p>One command to start, thresholds kept in one config file, and decisions written down where the next engineer will look.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section" id="music">
+  <div class="wrap">
+    <header class="section__head">
+      <p class="eyebrow mono">03 / Music</p>
+      <h2>Violin &amp; guitar.</h2>
+      <p class="section__sub">Recordings from the practice room. The violin work is also where Fingerboard Coach came from.</p>
+    </header>
+
+    {% if site.data.music.size > 0 %}
+    <div class="recordings">
+      {% for r in site.data.music %}
+      <article class="recording">
+        {% if r.youtube %}
+        <div class="recording__media">
+          <iframe src="https://www.youtube-nocookie.com/embed/{{ r.youtube }}" title="{{ r.title }}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        {% elsif r.audio %}
+        <audio controls preload="none" src="{{ r.audio | relative_url }}"></audio>
+        {% endif %}
+        <div class="recording__body">
+          <p class="mono recording__meta">{{ r.instrument | capitalize }}{% if r.date %} · {{ r.date }}{% endif %}</p>
+          <h3>{{ r.title }}</h3>
+          {% if r.note %}<p>{{ r.note }}</p>{% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">
+      <p class="mono">Recordings coming soon.</p>
+      <p>Until then, try the <a href="/violin-practice-system/">practice tool</a> I use every day.</p>
+    </div>
     {% endif %}
-    {% if paginator.next_page %}
-    <li class="next">
-        <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older Posts &rarr;</a>
-    </li>
-    {% endif %}
-</ul>
-{% endif %}
+  </div>
+</section>
+
+<section class="section section--alt" id="lab">
+  <div class="wrap">
+    <header class="section__head">
+      <p class="eyebrow mono">04 / Lab</p>
+      <h2>Smaller builds and experiments.</h2>
+    </header>
+    <ul class="lab">
+      {% for l in site.data.lab %}
+      <li>
+        <a href="{{ l.repo }}"><span class="lab__name mono">{{ l.name }}</span></a>
+        <span class="lab__note">{{ l.note }}</span>
+        <span class="lab__lang mono">{{ l.lang }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="more"><a class="mono" href="https://github.com/{{ site.author.github }}?tab=repositories">All repositories ↗</a></p>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="wrap contact">
+    <div>
+      <p class="eyebrow mono">05 / Contact</p>
+      <h2>Have a hard problem? Let's talk.</h2>
+    </div>
+    <div class="contact__links">
+      <a class="btn btn--primary" href="mailto:{{ site.author.email }}">Email</a>
+      {% if resume %}<a class="btn" href="{{ site.resume_path | relative_url }}">Resume (PDF)</a>{% endif %}
+      <a class="btn" href="https://github.com/{{ site.author.github }}">GitHub ↗</a>
+      {% if site.author.linkedin %}<a class="btn" href="https://www.linkedin.com/in/{{ site.author.linkedin }}">LinkedIn ↗</a>{% endif %}
+    </div>
+  </div>
+</section>

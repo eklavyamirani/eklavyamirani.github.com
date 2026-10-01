@@ -1,0 +1,63 @@
+# Selected work, shown as large cards in this order.
+# Fields: name, tagline, summary, points (list), stack (list), repo, live (optional)
+
+- name: Fingerboard Coach
+  tagline: Real-time intonation and rhythm coaching for violin
+  summary: >-
+    Listens through the microphone while you play and scores every note on
+    pitch, timing and shift accuracy. A 77-skill dependency graph decides
+    what you practise next.
+  points:
+    - Pitch tracking in the browser, measured on the steady part of each note so vibrato doesn't skew it. Notes are scored in cents and milliseconds.
+    - A skill counts as mastered only after clean first tries on two different days. Spaced reviews follow at 1, 2, 4, 7, 14 and 30 days.
+    - Latency calibration measures speaker and mic delay, so early and late are judged against the click you actually hear.
+  stack: [Web Audio API, JavaScript, Signal processing, GitHub Pages]
+  repo: https://github.com/eklavyamirani/violin-practice-system
+  live: /violin-practice-system/
+
+- name: pr-review
+  tagline: Reviewing code that a language model wrote
+  summary: >-
+    Turns a pull request into an interactive review page. Reading a diff
+    means decoding syntax, simulating execution, inferring intent and placing
+    the change in the system all at once. The page gives each of those jobs
+    its own view.
+  points:
+    - Value tapes come from actually running the command against both versions.
+    - Hunks are ordered by when the code runs, not by file order.
+    - Before each hunk is revealed, a probe asks the reviewer to predict what it does, so attention stays on the code.
+  stack: [Containers, HTML, Static analysis, LLM tooling]
+  repo: https://github.com/eklavyamirani/pr-code-review-skill
+
+- name: Video Frame Extractor
+  tagline: Breaking choreography down into the moments that matter
+  summary: >-
+    Upload a dance video and get draft markers at scene changes and movement
+    peaks. Adjust them by hand, then export clips at any speed.
+  points:
+    - FFmpeg pixel-diff scene detection runs alongside MediaPipe pose tracking on 33 body landmarks.
+    - Detection proposes markers and a person makes the final call on a thumbnail timeline.
+    - Runs with a single docker-compose command.
+  stack: [Python, FFmpeg, MediaPipe, Docker]
+  repo: https://github.com/eklavyamirani/video-frame-extractor
+
+- name: ESP32 Robot Car
+  tagline: Replacing vendor firmware with a clean FreeRTOS design
+  summary: >-
+    ESP-IDF firmware for a 4WD ESP32 car kit. It replaces the manufacturer's
+    Arduino code with modular, task-based components.
+  points:
+    - A PCA9685 PWM controller over I²C drives four H-bridge motors.
+    - The hardware map is written down before features, so each peripheral can be added on its own.
+  stack: [C, ESP-IDF, FreeRTOS, I²C]
+  repo: https://github.com/eklavyamirani/esp-car
+
+- name: code-review.nvim
+  tagline: Pull request review without leaving the editor
+  summary: >-
+    Unified and side-by-side diffs, file traversal and inline review comments
+    inside Neovim. It detects the provider from your git remote, and the
+    provider layer is written so Azure DevOps, Gitea and GitLab can be added.
+  points: []
+  stack: [Lua, Neovim, GitHub CLI]
+  repo: https://github.com/eklavyamirani/code-review.nvim

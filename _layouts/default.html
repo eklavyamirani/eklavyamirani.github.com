@@ -1,16 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-{% include head.html %}
-
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description | strip_newlines | strip }}">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:title" content="{{ site.title }}">
+  <meta property="og:description" content="{{ site.description | strip_newlines | strip }}">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2311151c'/%3E%3Cpath d='M5 18c3 0 3-6 6-6s3 9 6 9 3-12 6-12 3 6 4 6' fill='none' stroke='%23f2a65a' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+</head>
 <body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav">
+    <div class="wrap nav__inner">
+      <a class="nav__brand" href="{{ '/' | relative_url }}">eklavya<span>.</span>mirani</a>
+      <nav aria-label="Primary">
+        <a href="{{ '/#work' | relative_url }}">Work</a>
+        <a href="{{ '/#music' | relative_url }}">Music</a>
+        <a href="{{ '/#lab' | relative_url }}">Lab</a>
+        <a href="{{ '/#contact' | relative_url }}">Contact</a>
+      </nav>
+    </div>
+  </header>
 
-    {% include nav.html %}
-
+  <main id="main">
     {{ content }}
+  </main>
 
-    {% include footer.html %}
-
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <span>© {{ site.time | date: "%Y" }} {{ site.author.name }}</span>
+      <span class="mono">Static HTML on GitHub Pages. No trackers.</span>
+    </div>
+  </footer>
 </body>
-
 </html>
