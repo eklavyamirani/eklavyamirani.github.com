@@ -1,0 +1,136 @@
+name: Promote from staging
+
+# Opens a PR that replaces this site with a release of portfolio-staging.
+# The staging repo is public and the PR is opened with this repo's own token,
+# so no secrets are needed. Nothing goes live until the PR is merged.
+
+on:
+  schedule:
+    - cron: "17 */6 * * *" # picks up new staging releases
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Staging release tag to promote (blank = latest release)
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: promote
+  cancel-in-progress: false
+
+env:
+  STAGING_REPO: eklavyamirani/portfolio-staging
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pick the release
+        id: pick
+        env:
+          REQUESTED: ${{ inputs.tag }}
+        run: |
+          if [ -n "$REQUESTED" ]; then
+            tag="$REQUESTED"
+          else
+            tag=$(gh release view -R "$STAGING_REPO" --json tagName --jq .tagName 2>/dev/null || true)
+            if [ -z "$tag" ]; then
+              echo "No staging releases yet." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          fi
+          # Confirms the tag is a published release, not just any ref.
+          gh release view "$tag" -R "$STAGING_REPO" --json url --jq .url > /dev/null
+
+          live=$(gh api "repos/$GITHUB_REPOSITORY/contents/.promoted-from?ref=$GITHUB_REF_NAME" \
+            -H "Accept: application/vnd.github.raw" 2>/dev/null | head -n1 || true)
+          if [ "$live" = "$tag" ]; then
+            echo "$tag is already live." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          existing=$(gh pr list -R "$GITHUB_REPOSITORY" --head "promote/$tag" --state all --json url --jq '.[0].url')
+          if [ -n "$existing" ]; then
+            echo "$tag already has a PR: $existing" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - if: steps.pick.outputs.tag
+        uses: actions/checkout@v7
+        with:
+          path: site
+
+      - if: steps.pick.outputs.tag
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ env.STAGING_REPO }}
+          ref: ${{ steps.pick.outputs.tag }}
+          path: staging
+
+      - if: steps.pick.outputs.tag
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: staging/package-lock.json
+
+      # PRs opened with the built-in token don't trigger CI, so verify here.
+      - name: Test and build the release
+        if: steps.pick.outputs.tag
+        working-directory: staging
+        run: |
+          npm ci
+          npm test
+          npm run check
+          npm run build
+
+      - name: Open the pull request
+        if: steps.pick.outputs.tag
+        working-directory: site
+        env:
+          TAG: ${{ steps.pick.outputs.tag }}
+        run: |
+          branch="promote/$TAG"
+          sha=$(git -C ../staging rev-parse HEAD)
+          release_url="$GITHUB_SERVER_URL/$STAGING_REPO/releases/tag/$TAG"
+
+          git switch -c "$branch"
+          # Mirror the release, keeping this repo's git data, custom domain and
+          # this workflow.
+          rsync -a --delete \
+            --exclude .git/ \
+            --exclude CNAME \
+            --exclude .github/workflows/promote.yml \
+            --exclude node_modules/ \
+            --exclude dist/ \
+            --exclude .astro/ \
+            ../staging/ ./
+          printf '%s\n%s\n' "$TAG" "$sha" > .promoted-from
+
+          git add -A
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -q -m "Promote portfolio-staging $TAG" -m "Release: $release_url"
+          git push --force origin "$branch"
+
+          cat > "$RUNNER_TEMP/pr-body.md" <<EOF
+          Promotes portfolio-staging [$TAG]($release_url) (\`${sha::7}\`) to the live site.
+
+          The release passed its tests, type check and build in this workflow. GitHub doesn't run CI on PRs opened by Actions, which is why they run here instead.
+
+          Before you merge:
+
+          - [ ] Preview the staging site: https://github.ekkylab.uk/portfolio-staging/
+          - [ ] **First promotion only:** under **Settings → Pages**, set **Source** to **GitHub Actions**. Otherwise Pages serves \`$GITHUB_REF_NAME\` as plain files.
+          - [ ] Check that the custom domain is still \`github.ekkylab.uk\`
+
+          Merging replaces the contents of \`$GITHUB_REF_NAME\`. The original blog is archived on \`archive/legacy-blog\`.
+          EOF
+
+          gh pr create --base "$GITHUB_REF_NAME" --head "$branch" \
+            --title "Promote portfolio-staging $TAG" --body-file "$RUNNER_TEMP/pr-body.md" \
+            >> "$GITHUB_STEP_SUMMARY"
